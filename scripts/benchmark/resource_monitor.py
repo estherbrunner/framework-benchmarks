@@ -83,7 +83,10 @@ class InteractionMetrics:
 
 def launch_isolated_chrome(port=0, url="about:blank"):
     """Launch an isolated Chrome instance with its own user data directory."""
-    chrome = shutil.which("google-chrome") or shutil.which("chromium-browser") or shutil.which("chromium")
+    # Reuse the cross-platform Chrome detection from chrome_launcher
+    # (handles macOS /Applications/... paths, Windows, and Linux).
+    from chrome_launcher import ChromeLauncher
+    chrome = ChromeLauncher().find_chrome_executable()
     if not chrome:
         raise RuntimeError("Chrome/Chromium not found")
 

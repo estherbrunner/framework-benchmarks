@@ -18,9 +18,10 @@ from rich import print as rprint
 # =============================================================================
 
 # Color palette for frameworks (vibrant and accessible)
+# Keep in sync with frameworks.json `meta.color` for each framework.
 FRAMEWORK_COLORS = {
     'react': '#61DAFB',
-    'angular': '#DD0031', 
+    'angular': '#DD0031',
     'vue': '#4FC08D',
     'svelte': '#FF3E00',
     'solid': '#2C4F7C',
@@ -30,7 +31,9 @@ FRAMEWORK_COLORS = {
     'lit': '#324FFF',
     'vanilla': '#F7DF1E',
     'jquery': '#0769AD',
-    'vanjs': '#FF6B35'
+    'vanjs': '#FF6B35',
+    'le-truc': '#a97fe9',
+    'lume-js': '#7C3AED'
 }
 
 # Color mappings for specific chart metrics
