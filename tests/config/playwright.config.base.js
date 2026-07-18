@@ -79,6 +79,13 @@ function createConfig(framework) {
         url: 'http://localhost:3000/',
       }
     },
+    'le-truc': {
+      baseURL: 'http://localhost:3000/?mock=true',
+      webServer: {
+        command: 'npm run dev:le-truc',
+        url: 'http://localhost:3000/',
+      }
+    },
     vanjs: {
       baseURL: 'http://localhost:3000/?mock=true',
       webServer: {
