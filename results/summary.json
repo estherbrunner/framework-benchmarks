@@ -9,10 +9,10 @@
       },
       "bundle_size": {
         "compression_ratio": 3.19,
-        "file_count": 6,
+        "file_count": 3,
         "js_percentage": 93.34,
-        "total_gzipped": 10324,
-        "total_size": 32892
+        "total_gzipped": 5162,
+        "total_size": 16446
       },
       "dev_server": {
         "hmr_avg_time_ms": 0,
@@ -21,26 +21,26 @@
       "lighthouse": {
         "raw_metrics": {
           "cls": 0.0002,
-          "fcp": 1363.52,
-          "lcp": 1617.99,
-          "speed_index": 1363.52,
+          "fcp": 1357.67,
+          "lcp": 1357.67,
+          "speed_index": 1357.67,
           "tbt": 0
         },
         "scores": {
           "accessibility": 100,
           "best_practices": 100,
-          "performance": 99.6,
+          "performance": 100,
           "seo": 90
         }
       },
       "resource_usage": {
-        "average_cpu": 15,
+        "average_cpu": 4.78,
         "cpu": 0,
         "heap_delta": 0,
-        "mem_efficiency": -0.012,
-        "memory": 985.11,
-        "memory_delta": 6.42,
-        "peak_cpu": 25
+        "mem_efficiency": 0.011,
+        "memory": 1062.53,
+        "memory_delta": 30.8,
+        "peak_cpu": 26.2
       },
       "source_analysis": {
         "cyclomatic_complexity": 68,
@@ -53,58 +53,58 @@
     },
     "angular": {
       "build_time": {
-        "build_time_ms": 10413.67,
+        "build_time_ms": 2471,
         "build_time_success": true,
-        "output_size_mb": 2.4,
+        "output_size_mb": 2.36,
         "success": true
       },
       "bundle_size": {
-        "compression_ratio": 3.21,
+        "compression_ratio": 3.12,
         "file_count": 3,
-        "js_percentage": 92.72,
-        "total_gzipped": 74575,
-        "total_size": 239051
+        "js_percentage": 90.45,
+        "total_gzipped": 61947,
+        "total_size": 193581
       },
       "dev_server": {
-        "hmr_avg_time_ms": 156,
-        "startup_time_ms": 6288.67
+        "hmr_avg_time_ms": 108,
+        "startup_time_ms": 2049
       },
       "lighthouse": {
         "raw_metrics": {
           "cls": 0.0001,
-          "fcp": 2108.33,
-          "lcp": 2615.69,
-          "speed_index": 2108.33,
-          "tbt": 3.2
+          "fcp": 1744.61,
+          "lcp": 2133.93,
+          "speed_index": 1744.61,
+          "tbt": 0
         },
         "scores": {
           "accessibility": 100,
           "best_practices": 100,
-          "performance": 95,
+          "performance": 98,
           "seo": 90
         }
       },
       "resource_usage": {
-        "average_cpu": 7.5,
+        "average_cpu": 2.31,
         "cpu": 0,
         "heap_delta": 0,
-        "mem_efficiency": -0.013,
-        "memory": 992.89,
-        "memory_delta": 5.53,
-        "peak_cpu": 20
+        "mem_efficiency": -0.01,
+        "memory": 1057.41,
+        "memory_delta": 18.75,
+        "peak_cpu": 20.3
       },
       "source_analysis": {
-        "cyclomatic_complexity": 85,
+        "cyclomatic_complexity": 89,
         "files_count": 13,
-        "halstead_volume": 29635.29,
-        "logical_lines": 474,
-        "maintainability_index": 604.86,
-        "physical_lines": 868
+        "halstead_volume": 29894.72,
+        "logical_lines": 484,
+        "maintainability_index": 616.31,
+        "physical_lines": 859
       }
     },
     "jquery": {
       "build_time": {
-        "build_time_ms": 727,
+        "build_time_ms": 496,
         "build_time_success": true,
         "output_size_mb": 2.26,
         "success": true
@@ -117,32 +117,32 @@
         "total_size": 100009
       },
       "dev_server": {
-        "hmr_avg_time_ms": 103,
-        "startup_time_ms": 1015
+        "hmr_avg_time_ms": 115,
+        "startup_time_ms": 1043
       },
       "lighthouse": {
         "raw_metrics": {
-          "cls": 0.1457,
-          "fcp": 1810.86,
-          "lcp": 1975.29,
-          "speed_index": 1810.86,
+          "cls": 0.1459,
+          "fcp": 1981.75,
+          "lcp": 1981.75,
+          "speed_index": 1981.75,
           "tbt": 0
         },
         "scores": {
           "accessibility": 100,
-          "best_practices": 99.2,
+          "best_practices": 96,
           "performance": 92,
           "seo": 90
         }
       },
       "resource_usage": {
-        "average_cpu": 15,
+        "average_cpu": 3.4,
         "cpu": 0,
         "heap_delta": 0,
-        "mem_efficiency": -0.02,
-        "memory": 985.28,
-        "memory_delta": 6.48,
-        "peak_cpu": 25
+        "mem_efficiency": -0.016,
+        "memory": 1052.88,
+        "memory_delta": 20.97,
+        "peak_cpu": 19.9
       },
       "source_analysis": {
         "cyclomatic_complexity": 45,
@@ -153,30 +153,81 @@
         "physical_lines": 481
       }
     },
+    "le-truc": {
+      "build_time": {
+        "build_time_ms": 504,
+        "build_time_success": true,
+        "output_size_mb": 2.2,
+        "success": true
+      },
+      "bundle_size": {
+        "compression_ratio": 2.81,
+        "file_count": 1,
+        "js_percentage": 100,
+        "total_gzipped": 13056,
+        "total_size": 36682
+      },
+      "dev_server": {
+        "hmr_avg_time_ms": 115,
+        "startup_time_ms": 1044
+      },
+      "lighthouse": {
+        "raw_metrics": {
+          "cls": 0,
+          "fcp": 1354.57,
+          "lcp": 1677.86,
+          "speed_index": 1413.44,
+          "tbt": 0
+        },
+        "scores": {
+          "accessibility": 100,
+          "best_practices": 100,
+          "performance": 100,
+          "seo": 90
+        }
+      },
+      "resource_usage": {
+        "average_cpu": 3.2,
+        "cpu": 0,
+        "heap_delta": 0,
+        "mem_efficiency": -0.011,
+        "memory": 1054.69,
+        "memory_delta": 18.03,
+        "peak_cpu": 18.9
+      },
+      "source_analysis": {
+        "cyclomatic_complexity": 62,
+        "files_count": 4,
+        "halstead_volume": 24227.08,
+        "logical_lines": 351,
+        "maintainability_index": 172.96,
+        "physical_lines": 492
+      }
+    },
     "lit": {
       "build_time": {
-        "build_time_ms": 497.33,
+        "build_time_ms": 411,
         "build_time_success": true,
         "output_size_mb": 2.21,
         "success": true
       },
       "bundle_size": {
-        "compression_ratio": 3.82,
+        "compression_ratio": 3.8,
         "file_count": 1,
-        "js_percentage": 98.82,
-        "total_gzipped": 15752,
-        "total_size": 60102
+        "js_percentage": 98.81,
+        "total_gzipped": 15719,
+        "total_size": 59808
       },
       "dev_server": {
-        "hmr_avg_time_ms": 104.33,
-        "startup_time_ms": 1016.67
+        "hmr_avg_time_ms": 111,
+        "startup_time_ms": 1038
       },
       "lighthouse": {
         "raw_metrics": {
-          "cls": 0.0548,
-          "fcp": 1528.04,
-          "lcp": 1843.56,
-          "speed_index": 1528.04,
+          "cls": 0,
+          "fcp": 1529.32,
+          "lcp": 1832.48,
+          "speed_index": 1529.32,
           "tbt": 0
         },
         "scores": {
@@ -187,26 +238,77 @@
         }
       },
       "resource_usage": {
-        "average_cpu": 13.3,
+        "average_cpu": 3.34,
         "cpu": 0,
         "heap_delta": 0,
-        "mem_efficiency": -0.01,
-        "memory": 974.48,
-        "memory_delta": 7.57,
-        "peak_cpu": 24.9
+        "mem_efficiency": -0.008,
+        "memory": 1049.3,
+        "memory_delta": 16.56,
+        "peak_cpu": 29.2
       },
       "source_analysis": {
         "cyclomatic_complexity": 84,
         "files_count": 8,
-        "halstead_volume": 46709.68,
+        "halstead_volume": 45970.31,
         "logical_lines": 955,
-        "maintainability_index": 246.73,
-        "physical_lines": 1310
+        "maintainability_index": 247.45,
+        "physical_lines": 1300
+      }
+    },
+    "lume-js": {
+      "build_time": {
+        "build_time_ms": 0,
+        "build_time_success": true,
+        "output_size_mb": 0,
+        "success": true
+      },
+      "bundle_size": {
+        "compression_ratio": 2.96,
+        "file_count": 4,
+        "js_percentage": 95.37,
+        "total_gzipped": 5574,
+        "total_size": 16495
+      },
+      "dev_server": {
+        "hmr_avg_time_ms": 0,
+        "startup_time_ms": 0
+      },
+      "lighthouse": {
+        "raw_metrics": {
+          "cls": 0,
+          "fcp": 0,
+          "lcp": 0,
+          "speed_index": 0,
+          "tbt": 0
+        },
+        "scores": {
+          "accessibility": 0,
+          "best_practices": 0,
+          "performance": 0,
+          "seo": 0
+        }
+      },
+      "resource_usage": {
+        "average_cpu": 29.59,
+        "cpu": 26.1,
+        "heap_delta": 0,
+        "mem_efficiency": -0.005,
+        "memory": 1042.67,
+        "memory_delta": 17.69,
+        "peak_cpu": 38.2
+      },
+      "source_analysis": {
+        "cyclomatic_complexity": 67,
+        "files_count": 4,
+        "halstead_volume": 17543.75,
+        "logical_lines": 234,
+        "maintainability_index": 154.88,
+        "physical_lines": 321
       }
     },
     "preact": {
       "build_time": {
-        "build_time_ms": 516,
+        "build_time_ms": 356,
         "build_time_success": true,
         "output_size_mb": 2.18,
         "success": true
@@ -219,32 +321,32 @@
         "total_size": 27622
       },
       "dev_server": {
-        "hmr_avg_time_ms": 153.33,
-        "startup_time_ms": 1488
+        "hmr_avg_time_ms": 111,
+        "startup_time_ms": 1042
       },
       "lighthouse": {
         "raw_metrics": {
           "cls": 0.0001,
-          "fcp": 1372,
-          "lcp": 1676.29,
-          "speed_index": 1372,
+          "fcp": 1356.68,
+          "lcp": 1660.02,
+          "speed_index": 1358.74,
           "tbt": 0
         },
         "scores": {
           "accessibility": 100,
           "best_practices": 100,
-          "performance": 99.4,
+          "performance": 100,
           "seo": 90
         }
       },
       "resource_usage": {
-        "average_cpu": 18.3,
+        "average_cpu": 8.67,
         "cpu": 0,
         "heap_delta": 0,
-        "mem_efficiency": -0.012,
-        "memory": 989.08,
-        "memory_delta": 6.49,
-        "peak_cpu": 44.9
+        "mem_efficiency": -0.011,
+        "memory": 1046.95,
+        "memory_delta": 18.2,
+        "peak_cpu": 25.9
       },
       "source_analysis": {
         "cyclomatic_complexity": 101,
@@ -257,58 +359,58 @@
     },
     "qwik": {
       "build_time": {
-        "build_time_ms": 745,
+        "build_time_ms": 572,
         "build_time_success": true,
         "output_size_mb": 2.25,
         "success": true
       },
       "bundle_size": {
         "compression_ratio": 2.63,
-        "file_count": 26,
+        "file_count": 13,
         "js_percentage": 100,
-        "total_gzipped": 69151,
-        "total_size": 182004
+        "total_gzipped": 34628,
+        "total_size": 91158
       },
       "dev_server": {
-        "hmr_avg_time_ms": 105.33,
-        "startup_time_ms": 1105
+        "hmr_avg_time_ms": 112,
+        "startup_time_ms": 1041
       },
       "lighthouse": {
         "raw_metrics": {
-          "cls": 0.9825,
-          "fcp": 1401.4,
-          "lcp": 2119.14,
-          "speed_index": 1401.4,
+          "cls": 0.0001,
+          "fcp": 1429.94,
+          "lcp": 2116.52,
+          "speed_index": 1620.95,
           "tbt": 0
         },
         "scores": {
           "accessibility": 96,
           "best_practices": 100,
-          "performance": 74,
+          "performance": 99,
           "seo": 90
         }
       },
       "resource_usage": {
-        "average_cpu": 11.67,
+        "average_cpu": 2.65,
         "cpu": 0,
         "heap_delta": 0,
-        "mem_efficiency": -0.012,
-        "memory": 988.44,
-        "memory_delta": 6.05,
-        "peak_cpu": 20
+        "mem_efficiency": -0.013,
+        "memory": 1098.19,
+        "memory_delta": 17.64,
+        "peak_cpu": 14.6
       },
       "source_analysis": {
         "cyclomatic_complexity": 83,
         "files_count": 16,
         "halstead_volume": 26425.59,
-        "logical_lines": 414,
-        "maintainability_index": 862.46,
+        "logical_lines": 415,
+        "maintainability_index": 861.8,
         "physical_lines": 754
       }
     },
     "react": {
       "build_time": {
-        "build_time_ms": 820,
+        "build_time_ms": 654,
         "build_time_success": true,
         "output_size_mb": 2.31,
         "success": true
@@ -321,15 +423,15 @@
         "total_size": 158538
       },
       "dev_server": {
-        "hmr_avg_time_ms": 151,
-        "startup_time_ms": 1091.67
+        "hmr_avg_time_ms": 122,
+        "startup_time_ms": 1019
       },
       "lighthouse": {
         "raw_metrics": {
           "cls": 0.0001,
-          "fcp": 1959.18,
-          "lcp": 2263.77,
-          "speed_index": 1959.18,
+          "fcp": 1954.93,
+          "lcp": 2257.39,
+          "speed_index": 1954.93,
           "tbt": 0
         },
         "scores": {
@@ -340,13 +442,13 @@
         }
       },
       "resource_usage": {
-        "average_cpu": 19.93,
+        "average_cpu": 4.58,
         "cpu": 0,
         "heap_delta": 0,
-        "mem_efficiency": -0.012,
-        "memory": 991.04,
-        "memory_delta": 6.77,
-        "peak_cpu": 39.8
+        "mem_efficiency": -0.01,
+        "memory": 1052.28,
+        "memory_delta": 18.8,
+        "peak_cpu": 26.1
       },
       "source_analysis": {
         "cyclomatic_complexity": 90,
@@ -359,7 +461,7 @@
     },
     "solid": {
       "build_time": {
-        "build_time_ms": 764.67,
+        "build_time_ms": 531,
         "build_time_success": true,
         "output_size_mb": 2.18,
         "success": true
@@ -372,15 +474,15 @@
         "total_size": 26458
       },
       "dev_server": {
-        "hmr_avg_time_ms": 103,
-        "startup_time_ms": 1015.67
+        "hmr_avg_time_ms": 111,
+        "startup_time_ms": 1039
       },
       "lighthouse": {
         "raw_metrics": {
           "cls": 0.0001,
-          "fcp": 1359.37,
-          "lcp": 1522.65,
-          "speed_index": 1359.37,
+          "fcp": 1385.51,
+          "lcp": 1539.76,
+          "speed_index": 1385.51,
           "tbt": 0
         },
         "scores": {
@@ -391,13 +493,13 @@
         }
       },
       "resource_usage": {
-        "average_cpu": 16.63,
+        "average_cpu": 3.13,
         "cpu": 0,
         "heap_delta": 0,
-        "mem_efficiency": -0.012,
-        "memory": 986.84,
-        "memory_delta": 6.98,
-        "peak_cpu": 29.9
+        "mem_efficiency": -0.011,
+        "memory": 1045.86,
+        "memory_delta": 15.06,
+        "peak_cpu": 17.1
       },
       "source_analysis": {
         "cyclomatic_complexity": 98,
@@ -410,45 +512,45 @@
     },
     "svelte": {
       "build_time": {
-        "build_time_ms": 1917.33,
+        "build_time_ms": 1099,
         "build_time_success": true,
         "output_size_mb": 2.27,
         "success": true
       },
       "bundle_size": {
-        "compression_ratio": 3.01,
+        "compression_ratio": 3.05,
         "file_count": 11,
-        "js_percentage": 69.89,
-        "total_gzipped": 38344,
-        "total_size": 115513
+        "js_percentage": 68.6,
+        "total_gzipped": 38610,
+        "total_size": 117668
       },
       "dev_server": {
-        "hmr_avg_time_ms": 149.67,
-        "startup_time_ms": 1068.67
+        "hmr_avg_time_ms": 135,
+        "startup_time_ms": 1224
       },
       "lighthouse": {
         "raw_metrics": {
-          "cls": 0.0001,
-          "fcp": 1671.42,
-          "lcp": 2130.02,
-          "speed_index": 1671.42,
+          "cls": 0,
+          "fcp": 1657.47,
+          "lcp": 2106.4,
+          "speed_index": 1657.47,
           "tbt": 0
         },
         "scores": {
           "accessibility": 100,
-          "best_practices": 100,
+          "best_practices": 96,
           "performance": 98,
           "seo": 90
         }
       },
       "resource_usage": {
-        "average_cpu": 13.33,
+        "average_cpu": 2.7,
         "cpu": 0,
         "heap_delta": 0,
-        "mem_efficiency": -0.014,
-        "memory": 987.93,
-        "memory_delta": 5.08,
-        "peak_cpu": 20
+        "mem_efficiency": 0.004,
+        "memory": 1027.77,
+        "memory_delta": 10.19,
+        "peak_cpu": 21.4
       },
       "source_analysis": {
         "cyclomatic_complexity": 101,
@@ -468,10 +570,10 @@
       },
       "bundle_size": {
         "compression_ratio": 3.8,
-        "file_count": 6,
+        "file_count": 3,
         "js_percentage": 100,
-        "total_gzipped": 10960,
-        "total_size": 41612
+        "total_gzipped": 5480,
+        "total_size": 20806
       },
       "dev_server": {
         "hmr_avg_time_ms": 0,
@@ -479,10 +581,10 @@
       },
       "lighthouse": {
         "raw_metrics": {
-          "cls": 0.1457,
-          "fcp": 1214.81,
-          "lcp": 1519.75,
-          "speed_index": 1214.81,
+          "cls": 0.1461,
+          "fcp": 1217.31,
+          "lcp": 1511.08,
+          "speed_index": 1278.3,
           "tbt": 0
         },
         "scores": {
@@ -493,13 +595,13 @@
         }
       },
       "resource_usage": {
-        "average_cpu": 14.97,
+        "average_cpu": 2.23,
         "cpu": 0,
         "heap_delta": 0,
-        "mem_efficiency": 0.002,
-        "memory": 980.87,
-        "memory_delta": 7.35,
-        "peak_cpu": 24.9
+        "mem_efficiency": -0.023,
+        "memory": 1049.16,
+        "memory_delta": 23.14,
+        "peak_cpu": 19.2
       },
       "source_analysis": {
         "cyclomatic_complexity": 74,
@@ -512,7 +614,7 @@
     },
     "vanjs": {
       "build_time": {
-        "build_time_ms": 456.33,
+        "build_time_ms": 422,
         "build_time_success": true,
         "output_size_mb": 2.17,
         "success": true
@@ -525,15 +627,15 @@
         "total_size": 17211
       },
       "dev_server": {
-        "hmr_avg_time_ms": 107.67,
-        "startup_time_ms": 1188
+        "hmr_avg_time_ms": 111,
+        "startup_time_ms": 1035
       },
       "lighthouse": {
         "raw_metrics": {
-          "cls": 0.0001,
-          "fcp": 1214.31,
-          "lcp": 1384.17,
-          "speed_index": 1214.31,
+          "cls": 0,
+          "fcp": 1206.81,
+          "lcp": 1380.21,
+          "speed_index": 1307.73,
           "tbt": 0
         },
         "scores": {
@@ -544,13 +646,13 @@
         }
       },
       "resource_usage": {
-        "average_cpu": 11.67,
+        "average_cpu": 1.77,
         "cpu": 0,
         "heap_delta": 0,
-        "mem_efficiency": 0.004,
-        "memory": 975.18,
-        "memory_delta": 9.42,
-        "peak_cpu": 25
+        "mem_efficiency": -0.006,
+        "memory": 1040.19,
+        "memory_delta": 12.53,
+        "peak_cpu": 13.8
       },
       "source_analysis": {
         "cyclomatic_complexity": 76,
@@ -563,7 +665,7 @@
     },
     "vue": {
       "build_time": {
-        "build_time_ms": 821.67,
+        "build_time_ms": 590,
         "build_time_success": true,
         "output_size_mb": 2.23,
         "success": true
@@ -576,15 +678,15 @@
         "total_size": 76585
       },
       "dev_server": {
-        "hmr_avg_time_ms": 103,
-        "startup_time_ms": 1014.67
+        "hmr_avg_time_ms": 111,
+        "startup_time_ms": 1032
       },
       "lighthouse": {
         "raw_metrics": {
           "cls": 0.0001,
-          "fcp": 1668.89,
-          "lcp": 1839.14,
-          "speed_index": 1668.89,
+          "fcp": 1657.24,
+          "lcp": 1839.86,
+          "speed_index": 1657.24,
           "tbt": 0
         },
         "scores": {
@@ -595,13 +697,13 @@
         }
       },
       "resource_usage": {
-        "average_cpu": 11.67,
+        "average_cpu": 7.3,
         "cpu": 0,
         "heap_delta": 0,
-        "mem_efficiency": -0.012,
-        "memory": 987.74,
-        "memory_delta": 6.53,
-        "peak_cpu": 20
+        "mem_efficiency": -0.011,
+        "memory": 1049.23,
+        "memory_delta": 18.08,
+        "peak_cpu": 21.8
       },
       "source_analysis": {
         "cyclomatic_complexity": 57,
@@ -610,56 +712,6 @@
         "logical_lines": 217,
         "maintainability_index": 686.46,
         "physical_lines": 677
-      }
-    },
-    "lume-js": {
-      "build_time": {
-        "build_time_ms": 0,
-        "build_time_success": true,
-        "output_size_mb": 0,
-        "success": true
-      },
-      "bundle_size": {
-        "total_size": 18867,
-        "total_gzipped": 5378,
-        "file_count": 2,
-        "js_percentage": 95.9506015794774,
-        "compression_ratio": 3.51
-      },
-      "dev_server": {
-        "startup_time_ms": 0,
-        "hmr_avg_time_ms": 0
-      },
-      "lighthouse": {
-        "scores": {
-          "performance": 98.0,
-          "accessibility": 100,
-          "best_practices": 100,
-          "seo": 90.0
-        },
-        "raw_metrics": {
-          "fcp": 1517.726,
-          "lcp": 2184.059,
-          "cls": 0,
-          "tbt": 10,
-          "speed_index": 2127.9409372403397
-        }
-      },
-      "resource_usage": {
-        "memory": 0,
-        "cpu": 0,
-        "peak_cpu": 0,
-        "average_cpu": 0,
-        "heap_delta": 0,
-        "memory_delta": 0,
-        "mem_efficiency": 0
-      },
-      "source_analysis": {
-        "files_count": 1,
-        "physical_lines": 491,
-        "logical_lines": 346,
-        "cyclomatic_complexity": 71,
-        "maintainability_index": 4.58
       }
     }
   },
@@ -672,7 +724,7 @@
       "resource_usage",
       "source_analysis"
     ],
-    "generated_at": "2025-09-09",
-    "source_directory": "benchmark-results/2025-09-09"
+    "generated_at": "2026-07-18",
+    "source_directory": "benchmark-results/2026-07-18"
   }
 }

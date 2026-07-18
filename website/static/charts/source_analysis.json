@@ -2,10 +2,11 @@
   "type": "bar",
   "data": {
     "labels": [
+      "Lume-Js",
       "Jquery",
       "Vue",
       "Alpine",
-      "Lume-Js",
+      "Le-Truc",
       "Vanjs",
       "Vanilla",
       "Svelte",
@@ -20,18 +21,19 @@
       {
         "label": "Logical Lines",
         "data": [
+          234,
           287,
           217,
           299,
-          346,
+          351,
           388,
           426,
           405,
-          414,
+          415,
           438,
           458,
           461,
-          474,
+          484,
           955
         ],
         "backgroundColor": "rgba(59, 130, 246, 0.8)",
@@ -41,10 +43,11 @@
       {
         "label": "Files Count (\u00d710)",
         "data": [
+          40,
           30,
           110,
           30,
-          10,
+          40,
           30,
           30,
           120,
@@ -62,10 +65,11 @@
       {
         "label": "Cyclomatic Complexity",
         "data": [
+          67,
           45,
           57,
           68,
-          71,
+          62,
           76,
           74,
           101,
@@ -73,7 +77,7 @@
           90,
           98,
           101,
-          85,
+          89,
           84
         ],
         "backgroundColor": "rgba(245, 101, 101, 0.8)",
