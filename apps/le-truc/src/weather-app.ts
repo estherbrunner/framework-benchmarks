@@ -1,5 +1,5 @@
-import { defineComponent, createList } from '@zeix/le-truc';
-import { weatherService, type WeatherData } from './weather-service.js';
+import { createList, defineComponent } from '@zeix/le-truc';
+import { type WeatherData, weatherService } from './weather-service.js';
 import { WeatherUtils } from './weather-utils.js';
 
 interface ForecastItemData {
@@ -122,94 +122,98 @@ defineComponent<WeatherAppProps>('weather-app', ({ expose, first, host, on, watc
         });
       }
       host.activeIndex = -1;
-    } catch (err: any) {
-      host.error = err?.message || 'Failed to fetch weather data';
+    } catch (err: unknown) {
+      host.error = err instanceof Error ? err.message : 'Failed to fetch weather data';
     } finally {
       host.isLoading = false;
     }
   };
 
-  // --- Forecast DOM reconciler: mirror list keys into forecastListEl ---
-  watch(() => Array.from(forecastList.keys()), keys => {
-    const current = new Map<string, HTMLElement>();
-    for (const child of Array.from(forecastListEl.children)) {
-      const el = child as HTMLElement;
-      const key = el.dataset.key;
-      if (key) current.set(key, el);
-    }
-    const keysSet = new Set(keys);
-
-    // Drop children whose key is no longer present
-    for (const [key, el] of current) {
-      if (!keysSet.has(key)) el.remove();
-    }
-
-    // Insert new keys (clone template) and move existing into order
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i];
-      let el = key && current.get(key);
-      if (key && !el) {
-        const fragment = template.content.cloneNode(true) as DocumentFragment;
-        el = fragment.firstElementChild as HTMLElement;
-        el.dataset.key = key;
-        const datum = forecastList.byKey(key)?.get();
-        if (datum) {
-          (el.querySelector('.forecast-item__day') as HTMLElement).textContent = WeatherUtils.formatDate(datum.date);
-          (el.querySelector('.forecast-item__icon') as HTMLElement).textContent = WeatherUtils.getWeatherIcon(datum.weatherCode, 1);
-          (el.querySelector('.forecast-item__condition') as HTMLElement).textContent = WeatherUtils.getWeatherDescription(datum.weatherCode);
-          (el.querySelector('[data-testid="forecast-high"]') as HTMLElement).textContent = WeatherUtils.formatTemperature(datum.high);
-          (el.querySelector('[data-testid="forecast-low"]') as HTMLElement).textContent = WeatherUtils.formatTemperature(datum.low);
-        }
-      }
-      const currentAtI = forecastListEl.children[i];
-      if (el && currentAtI !== el) forecastListEl.insertBefore(el, currentAtI ?? null);
-    }
-  });
-
-  // --- Per-item active-state toggle (re-evaluated when activeIndex changes) ---
-  watch('activeIndex', () => {
-    const items = Array.from(forecastListEl.querySelectorAll<HTMLElement>('.forecast-item'));
-    for (const item of items) {
-      const key = item.dataset.key;
-      if (!key) continue;
-      const idx = Number(key.replace('item', ''));
-      item.classList.toggle('active', host.activeIndex === idx);
-    }
-  });
-
-  // --- Click handler for forecast items (event delegation on the list) ---
-  on(forecastListEl, 'click', (e: Event) => {
-    const target = e.target as HTMLElement;
-    const item = target.closest('.forecast-item') as HTMLElement | null;
-    const key = item?.dataset.key;
-    if (!key) return {};
-    const idx = Number(key.replace('item', ''));
-    return { activeIndex: host.activeIndex === idx ? -1 : idx };
-  });
-
-  // --- Visibility of loading / error / content ---
-  watch('isLoading', isLoading => { loadingEl.hidden = !isLoading; });
-  watch('error', err => {
-    errorEl.hidden = !err;
-    if (err) errorMessageEl.textContent = err;
-  });
-  watch('hasData', has => { contentEl.hidden = !has; });
-
-  // --- Disable search button + sync button text while loading ---
-  watch('isLoading', isLoading => { button.disabled = isLoading; });
   const buttonTextEl = first('.search-button__text', 'Search button text is required') as HTMLElement;
-  watch('isLoading', isLoading => {
-    buttonTextEl.textContent = isLoading ? 'Loading...' : 'Get Weather';
-  });
 
-  // --- Search submit handler ---
-  on(form, 'submit', (e: Event) => {
-    e.preventDefault();
-    const city = input.value.trim();
-    if (city) loadWeather(city);
-    return {};
-  });
-
-  // --- Trigger initial load ---
+  // --- Trigger initial load (runs synchronously up to first await, kicking off the fetch) ---
   loadWeather(host.city);
+
+  // --- Return all effect descriptors so the runtime activates them ---
+  return [
+    // Forecast DOM reconciler: mirror list keys into forecastListEl
+    watch(() => Array.from(forecastList.keys()), keys => {
+      const current = new Map<string, HTMLElement>();
+      for (const child of Array.from(forecastListEl.children)) {
+        const el = child as HTMLElement;
+        const key = el.dataset.key;
+        if (key) current.set(key, el);
+      }
+      const keysSet = new Set(keys);
+
+      // Drop children whose key is no longer present
+      for (const [key, el] of current) {
+        if (!keysSet.has(key)) el.remove();
+      }
+
+      // Insert new keys (clone template) and move existing into order
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        let el = key && current.get(key);
+        if (key && !el) {
+          const fragment = template.content.cloneNode(true) as DocumentFragment;
+          el = fragment.firstElementChild as HTMLElement;
+          el.dataset.key = key;
+          const datum = forecastList.byKey(key)?.get();
+          if (datum) {
+            (el.querySelector('.forecast-item__day') as HTMLElement).textContent = WeatherUtils.formatDate(datum.date);
+            (el.querySelector('.forecast-item__icon') as HTMLElement).textContent = WeatherUtils.getWeatherIcon(datum.weatherCode, 1);
+            (el.querySelector('.forecast-item__condition') as HTMLElement).textContent = WeatherUtils.getWeatherDescription(datum.weatherCode);
+            (el.querySelector('[data-testid="forecast-high"]') as HTMLElement).textContent = WeatherUtils.formatTemperature(datum.high);
+            (el.querySelector('[data-testid="forecast-low"]') as HTMLElement).textContent = WeatherUtils.formatTemperature(datum.low);
+          }
+        }
+        const currentAtI = forecastListEl.children[i];
+        if (el && currentAtI !== el) forecastListEl.insertBefore(el, currentAtI ?? null);
+      }
+    }),
+
+    // Per-item active-state toggle (re-evaluated when activeIndex changes)
+    watch('activeIndex', () => {
+      const items = Array.from(forecastListEl.querySelectorAll<HTMLElement>('.forecast-item'));
+      for (const item of items) {
+        const key = item.dataset.key;
+        if (!key) continue;
+        const idx = Number(key.replace('item', ''));
+        item.classList.toggle('active', host.activeIndex === idx);
+      }
+    }),
+
+    // Click handler for forecast items (event delegation on the list)
+    on(forecastListEl, 'click', (e: Event) => {
+      const target = e.target as HTMLElement;
+      const item = target.closest('.forecast-item') as HTMLElement | null;
+      const key = item?.dataset.key;
+      if (!key) return {};
+      const idx = Number(key.replace('item', ''));
+      return { activeIndex: host.activeIndex === idx ? -1 : idx };
+    }),
+
+    // Visibility of loading / error / content
+    watch('isLoading', isLoading => { loadingEl.hidden = !isLoading; }),
+    watch('error', err => {
+      errorEl.hidden = !err;
+      if (err) errorMessageEl.textContent = err;
+    }),
+    watch('hasData', has => { contentEl.hidden = !has; }),
+
+    // Disable search button + sync button text while loading
+    watch('isLoading', isLoading => { button.disabled = isLoading; }),
+    watch('isLoading', isLoading => {
+      buttonTextEl.textContent = isLoading ? 'Loading...' : 'Get Weather';
+    }),
+
+    // Search submit handler
+    on(form, 'submit', (e: Event) => {
+      e.preventDefault();
+      const city = input.value.trim();
+      if (city) loadWeather(city);
+      return {};
+    })
+  ];
 });
