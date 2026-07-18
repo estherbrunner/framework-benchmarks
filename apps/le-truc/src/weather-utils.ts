@@ -33,7 +33,7 @@ export class WeatherUtils {
     return weatherCodes[weatherCode] || 'Unknown';
   }
 
-  static getWeatherIcon(weatherCode: number, isDay: number = 1): string {
+  static getWeatherIcon(weatherCode: number, isDay = 1): string {
     const iconMap: Record<number, string> = {
       0: isDay ? '☀️' : '🌙',
       1: isDay ? '🌤️' : '🌙',

@@ -72,7 +72,7 @@ defineComponent<WeatherAppProps>('weather-app', ({ expose, first, host, on, watc
   // --- Weather fetch modeled as a Task ---
   // Reading host.city inside the fn auto-tracks it; when the city changes the
   // previous in-flight computation is aborted and the fetch re-runs.
-  const weather = createTask<WeatherData>(async (_prev, signal) => {
+  const weather = createTask<WeatherData>(async(_prev, signal) => {
     const city = host.city;
     const data = await weatherService.getWeatherByCity(city);
     if (signal.aborted) throw new DOMException('Aborted', 'AbortError');

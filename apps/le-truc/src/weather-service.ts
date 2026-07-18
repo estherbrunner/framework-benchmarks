@@ -50,7 +50,7 @@ class WeatherService {
     return window.location.search.includes('mock=true') || isTestEnvironment;
   }
 
-  async getMockData(): Promise<any> {
+  async getMockData(): Promise<Omit<WeatherData, 'locationName' | 'country'>> {
     try {
       if (this.isTestEnvironment()) {
         await new Promise(resolve => setTimeout(resolve, 200));
@@ -109,7 +109,7 @@ class WeatherService {
     }
   }
 
-  async getWeatherData(lat: number, lon: number): Promise<any> {
+  async getWeatherData(lat: number, lon: number): Promise<Omit<WeatherData, 'locationName' | 'country'>> {
     if (this.useMockData) {
       return this.getMockData();
     }

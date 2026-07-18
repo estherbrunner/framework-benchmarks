@@ -150,6 +150,12 @@ export default [
         Event: 'readonly',
         SubmitEvent: 'readonly',
         Element: 'readonly',
+
+        // Additional DOM types used by TypeScript apps
+        HTMLButtonElement: 'readonly',
+        HTMLTemplateElement: 'readonly',
+        DocumentFragment: 'readonly',
+        DOMException: 'readonly',
       },
     },
     plugins: {
