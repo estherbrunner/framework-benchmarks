@@ -340,6 +340,34 @@
       }
     },
     {
+      "id": "le-truc",
+      "name": "Le Truc",
+      "displayName": "Le Truc",
+      "dir": "le-truc",
+      "assetsDir": "public",
+      "build": {
+        "buildCommand": "vite build",
+        "hasNodeModules": true,
+        "devCommand": "vite",
+        "testCommand": "playwright test --config=tests/config/playwright-le-truc.config.js",
+        "lintFiles": ["ts", "html"]
+      },
+      "meta": {
+        "emoji": "🧩",
+        "iconName": "zeix",
+        "iconUrl": "https://zeixcom.github.io/le-truc/favicon.ico",
+        "website": "https://zeixcom.github.io/le-truc/",
+        "docs": "https://zeixcom.github.io/le-truc/",
+        "github": "https://github.com/zeixcom/le-truc",
+        "npmPackage": "@zeix/le-truc",
+        "color": "#1E1E1E",
+        "accentColor": "#E63946",
+        "logo": "",
+        "description": "Type-safe reactive Web Components layer over server-rendered HTML",
+        "longDescription": "HTML-first progressive enhancement with fine-grained signals, built on standard Web Components."
+      }
+    },
+    {
       "id": "vanjs",
       "name": "VanJS",
       "dir": "vanjs",
