@@ -14,12 +14,12 @@ interface ForecastItemData {
   precipitationProb: number;
 }
 
-// Only city + activeIndex are exposed as host props. Weather data, loading
+// Only city + activeKey are exposed as host props. Weather data, loading
 // state, and errors are all carried by the `weather` Task signal below.
-// activeIndex uses -1 as a sentinel for "no active forecast item".
+// activeKey holds the date string of the expanded forecast item, or '' for none.
 type WeatherAppProps = {
   city: string;
-  activeIndex: number;
+  activeKey: string;
   [key: string]: NonNullable<unknown>;
 };
 
@@ -47,8 +47,13 @@ defineComponent<WeatherAppProps>('weather-app', ({ expose, first, host, on, watc
   const forecastListEl = first('[data-testid="forecast-list"]', 'Forecast list element is required') as HTMLElement;
   const template = first('#forecast-item-template', 'Forecast item template is required') as HTMLTemplateElement;
 
-  // --- Reactive list of forecast items, keyed by index string ---
-  const forecastList = createList<ForecastItemData>([], { keyConfig: 'item' });
+  // --- Reactive list of forecast items, keyed by date (stable across searches) ---
+  // The list is DERIVED from the weather Task (see the watch(weather, fn)
+  // descriptor below), never mutated inside a match handler. Mutating a list
+  // inside an un-untracked ok-handler writes back into the reactive graph and
+  // trips EffectConvergenceError — deriving separately keeps the data flow
+  // one-directional: Task → List → reconciler.
+  const forecastList = createList<ForecastItemData>([], { keyConfig: (item) => item.date });
 
   // --- Declare reactive props ---
   let initialCity = 'London';
@@ -61,7 +66,7 @@ defineComponent<WeatherAppProps>('weather-app', ({ expose, first, host, on, watc
 
   expose({
     city: initialCity,
-    activeIndex: -1
+    activeKey: ''
   });
 
   // --- Weather fetch modeled as a Task ---
@@ -92,6 +97,27 @@ defineComponent<WeatherAppProps>('weather-app', ({ expose, first, host, on, watc
 
   // --- Return all effect descriptors so the runtime activates them ---
   return [
+    // Derive forecast list state from the weather Task.
+    // Separate from the match handler so the list write can't feed back into
+    // the Task's effect graph. The function form of watch() untracks its
+    // callback, so forecastList.set() here is a clean side-effect — no
+    // ping-pong. Keys are stable (date strings) so unchanged days reuse
+    // their DOM nodes across searches.
+    watch(weather, (data) => {
+      const daily = data.daily;
+      forecastList.set(daily.time.map((date, i) => ({
+        date,
+        high: daily.temperature_2m_max[i],
+        low: daily.temperature_2m_min[i],
+        weatherCode: daily.weather_code[i],
+        sunrise: daily.sunrise[i],
+        sunset: daily.sunset[i],
+        rainSum: daily.rain_sum[i],
+        uvIndex: daily.uv_index_max[i],
+        precipitationProb: daily.precipitation_probability_max[i]
+      })));
+    }),
+
     // Forecast DOM reconciler: mirror list keys into forecastListEl
     watch(() => Array.from(forecastList.keys()), keys => {
       const current = new Map<string, HTMLElement>();
@@ -122,6 +148,16 @@ defineComponent<WeatherAppProps>('weather-app', ({ expose, first, host, on, watc
             (el.querySelector('.forecast-item__condition') as HTMLElement).textContent = WeatherUtils.getWeatherDescription(datum.weatherCode);
             (el.querySelector('[data-testid="forecast-high"]') as HTMLElement).textContent = WeatherUtils.formatTemperature(datum.high);
             (el.querySelector('[data-testid="forecast-low"]') as HTMLElement).textContent = WeatherUtils.formatTemperature(datum.low);
+            // Populate the expandable details block
+            const details = el.querySelector('.forecast-item__details') as HTMLElement | null;
+            if (details) {
+              (details.querySelector('[data-field="sunrise"]') as HTMLElement).textContent = WeatherUtils.formatTime(datum.sunrise);
+              (details.querySelector('[data-field="sunset"]') as HTMLElement).textContent = WeatherUtils.formatTime(datum.sunset);
+              (details.querySelector('[data-field="rain"]') as HTMLElement).textContent = `${datum.rainSum.toFixed(1)} mm`;
+              (details.querySelector('[data-field="uv"]') as HTMLElement).textContent = datum.uvIndex.toFixed(1);
+              (details.querySelector('[data-field="precip"]') as HTMLElement).textContent = WeatherUtils.formatPercentage(datum.precipitationProb);
+              (details.querySelector('[data-field="temp"]') as HTMLElement).textContent = `${WeatherUtils.formatTemperature(datum.high)} / ${WeatherUtils.formatTemperature(datum.low)}`;
+            }
           }
         }
         const currentAtI = forecastListEl.children[i];
@@ -129,31 +165,45 @@ defineComponent<WeatherAppProps>('weather-app', ({ expose, first, host, on, watc
       }
     }),
 
-    // Per-item active-state toggle (re-evaluated when activeIndex changes)
-    watch('activeIndex', () => {
+    // Per-item active-state toggle (re-evaluated when activeKey changes).
+    // Toggles both the .active class (drives styling) and the details block's
+    // `hidden` attribute (drives expand/collapse visibility).
+    watch('activeKey', () => {
       const items = Array.from(forecastListEl.querySelectorAll<HTMLElement>('.forecast-item'));
       for (const item of items) {
         const key = item.dataset.key;
         if (!key) continue;
-        const idx = Number(key.replace('item', ''));
-        item.classList.toggle('active', host.activeIndex === idx);
+        const isActive = host.activeKey === key;
+        item.classList.toggle('active', isActive);
+        const details = item.querySelector<HTMLElement>('.forecast-item__details');
+        if (details) details.hidden = !isActive;
       }
     }),
 
-    // Click handler for forecast items (event delegation on the list)
+    // Click + keyboard handler for forecast items (event delegation on the list).
+    // Enter/Space toggle the same as click — required for keyboard accessibility.
     on(forecastListEl, 'click', (e: Event) => {
       const target = e.target as HTMLElement;
       const item = target.closest('.forecast-item') as HTMLElement | null;
       const key = item?.dataset.key;
       if (!key) return {};
-      const idx = Number(key.replace('item', ''));
-      return { activeIndex: host.activeIndex === idx ? -1 : idx };
+      return { activeKey: host.activeKey === key ? '' : key };
+    }),
+    on(forecastListEl, 'keydown', (e: KeyboardEvent) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return {};
+      const target = e.target as HTMLElement;
+      const item = target.closest('.forecast-item') as HTMLElement | null;
+      const key = item?.dataset.key;
+      if (!key) return {};
+      e.preventDefault();
+      return { activeKey: host.activeKey === key ? '' : key };
     }),
 
     // Route Task states (nil/stale/err/ok) into visibility + button state.
-    // watch() wraps match() for Signal sources — this is Le Truc's idiomatic
-    // match-routed effect form, replacing the prior loadWeather + four status
-    // watches. Precedence: nil > err > stale > ok.
+    // watch(signal, handlers) wraps match() to form an effect descriptor.
+    // The ok handler does NOT mutate the forecast list — that's derived
+    // separately above to keep the data flow one-directional.
+    // Precedence: nil > err > stale > ok.
     watch(weather, {
       nil: () => {
         loadingEl.hidden = false;
@@ -185,24 +235,7 @@ defineComponent<WeatherAppProps>('weather-app', ({ expose, first, host, on, watc
         buttonTextEl.textContent = 'Get Weather';
         input.value = data.locationName;
         populateCurrentWeather(data);
-
-        // Rebuild forecast list from daily arrays
-        const daily = data.daily;
-        for (const key of Array.from(forecastList.keys())) forecastList.remove(key);
-        for (let i = 0; i < daily.time.length; i++) {
-          forecastList.add({
-            date: daily.time[i],
-            high: daily.temperature_2m_max[i],
-            low: daily.temperature_2m_min[i],
-            weatherCode: daily.weather_code[i],
-            sunrise: daily.sunrise[i],
-            sunset: daily.sunset[i],
-            rainSum: daily.rain_sum[i],
-            uvIndex: daily.uv_index_max[i],
-            precipitationProb: daily.precipitation_probability_max[i]
-          });
-        }
-        host.activeIndex = -1;
+        host.activeKey = '';
 
         // Persist the resolved (canonical) city name
         try {
