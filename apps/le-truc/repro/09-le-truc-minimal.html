@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Le Truc repro 09</title></head>
+<body>
+<!--
+  Minimal repro: watch(task, fn) does not subscribe to a Task.
+
+  Two subscriber variants are exercised against the same Task:
+    A: watch(task, fn)            — the function form
+    B: createEffect(() => task.get())  — explicit read
+
+  With variant A: the Task never runs at all (not even for the initial
+  value), and subsequent host.city writes don't trigger recomputation.
+  With variant B: all writes propagate correctly; the Task runs for
+  every value.
+
+  Switch the active subscriber via VARIANT below. Drive from the harness:
+    node apps/le-truc/repro/09-le-truc-minimal.mjs
+  Or click "cycle city" 3+ times and watch the console.
+-->
+<repro-app></repro-app>
+<button id="trigger">cycle city</button>
+<pre id="log"></pre>
+
+<script type="module">
+  import { defineComponent, createTask, createEffect } from '@zeix/le-truc'
+
+  // 'A' = watch(task, fn)   — DOES NOT subscribe; Task never runs
+  // 'B' = createEffect read — works correctly
+  const VARIANT = 'B'
+
+  window.__reproLog = []
+  const log = (msg) => {
+    window.__reproLog.push(msg)
+    document.getElementById('log').textContent += msg + '\n'
+    console.log('REPRO', msg)
+  }
+
+  defineComponent('repro-app', ({ expose, host, watch }) => {
+    expose({ city: 'A' })
+
+    const task = createTask(async (_prev, signal) => {
+      const c = host.city
+      log(`task START city=${c}`)
+      await new Promise(r => setTimeout(r, 50))
+      log(`task END   city=${c} aborted=${signal.aborted}`)
+      if (signal.aborted) throw new DOMException('aborted', 'AbortError')
+      return c
+    })
+
+    if (VARIANT === 'A') {
+      watch(task, (c) => { log(`watch(task,fn) fired for ${c}`) })
+    } else {
+      createEffect(() => {
+        try { task.get(); log('effect read task ok') }
+        catch { log('effect read task nil') }
+      })
+    }
+
+    window.__cycle = () => {
+      const next = host.city === 'A' ? 'B' : host.city === 'B' ? 'C' : 'D'
+      host.city = next
+      log(`cycle: host.city = ${next} (readback=${host.city})`)
+    }
+  })
+</script>
+
+<script>
+  document.getElementById('trigger').addEventListener('click', () => window.__cycle && window.__cycle())
+</script>
+</body>
+</html>
