@@ -1,4 +1,4 @@
-import { createList, defineComponent } from '@zeix/le-truc';
+import { createList, createTask, defineComponent } from '@zeix/le-truc';
 import { type WeatherData, weatherService } from './weather-service.js';
 import { WeatherUtils } from './weather-utils.js';
 
@@ -14,17 +14,11 @@ interface ForecastItemData {
   precipitationProb: number;
 }
 
-// ComponentProps requires NonNullable<unknown> for every prop, so nullable
-// state uses non-nullable sentinel values:
-//   error: ''      -> no error
-//   activeIndex: -1 -> no active forecast item
-// weatherData is only consumed internally to drive DOM updates, so it lives in
-// a local variable; a companion `hasData` boolean prop drives content visibility.
+// Only city + activeIndex are exposed as host props. Weather data, loading
+// state, and errors are all carried by the `weather` Task signal below.
+// activeIndex uses -1 as a sentinel for "no active forecast item".
 type WeatherAppProps = {
   city: string;
-  isLoading: boolean;
-  error: string;
-  hasData: boolean;
   activeIndex: number;
   [key: string]: NonNullable<unknown>;
 };
@@ -35,6 +29,7 @@ defineComponent<WeatherAppProps>('weather-app', ({ expose, first, host, on, watc
   const form = first('form[data-testid="search-form"]', 'Search form is required');
   const input = first('input[data-testid="search-input"]', 'Search input is required') as HTMLInputElement;
   const button = first('button[data-testid="search-button"]', 'Search button is required') as HTMLButtonElement;
+  const buttonTextEl = first('.search-button__text', 'Search button text is required') as HTMLElement;
   const loadingEl = first('[data-testid="loading"]', 'Loading element is required') as HTMLElement;
   const errorEl = first('[data-testid="error"]', 'Error element is required') as HTMLElement;
   const errorMessageEl = first('.error__message', 'Error message element is required') as HTMLElement;
@@ -66,10 +61,17 @@ defineComponent<WeatherAppProps>('weather-app', ({ expose, first, host, on, watc
 
   expose({
     city: initialCity,
-    isLoading: false,
-    error: '',
-    hasData: false,
     activeIndex: -1
+  });
+
+  // --- Weather fetch modeled as a Task ---
+  // Reading host.city inside the fn auto-tracks it; when the city changes the
+  // previous in-flight computation is aborted and the fetch re-runs.
+  const weather = createTask<WeatherData>(async (_prev, signal) => {
+    const city = host.city;
+    const data = await weatherService.getWeatherByCity(city);
+    if (signal.aborted) throw new DOMException('Aborted', 'AbortError');
+    return data;
   });
 
   // --- Populate current-weather fields from a successful payload ---
@@ -87,52 +89,6 @@ defineComponent<WeatherAppProps>('weather-app', ({ expose, first, host, on, watc
     cloudCoverEl.textContent = WeatherUtils.formatPercentage(c.cloud_cover);
     windDirectionEl.textContent = WeatherUtils.getWindDirection(c.wind_direction_10m);
   };
-
-  // --- Load weather for a city; updates props + forecast list ---
-  const loadWeather = async (cityName: string) => {
-    host.isLoading = true;
-    host.error = '';
-    host.hasData = false;
-    host.city = cityName;
-    try {
-      const data = await weatherService.getWeatherByCity(cityName);
-      host.hasData = true;
-      populateCurrentWeather(data);
-      input.value = cityName;
-      try {
-        localStorage.setItem('weather-app-location', cityName);
-      } catch {
-        /* ignore persistence errors */
-      }
-
-      // Rebuild forecast list from daily arrays
-      const daily = data.daily;
-      for (const key of Array.from(forecastList.keys())) forecastList.remove(key);
-      for (let i = 0; i < daily.time.length; i++) {
-        forecastList.add({
-          date: daily.time[i],
-          high: daily.temperature_2m_max[i],
-          low: daily.temperature_2m_min[i],
-          weatherCode: daily.weather_code[i],
-          sunrise: daily.sunrise[i],
-          sunset: daily.sunset[i],
-          rainSum: daily.rain_sum[i],
-          uvIndex: daily.uv_index_max[i],
-          precipitationProb: daily.precipitation_probability_max[i]
-        });
-      }
-      host.activeIndex = -1;
-    } catch (err: unknown) {
-      host.error = err instanceof Error ? err.message : 'Failed to fetch weather data';
-    } finally {
-      host.isLoading = false;
-    }
-  };
-
-  const buttonTextEl = first('.search-button__text', 'Search button text is required') as HTMLElement;
-
-  // --- Trigger initial load (runs synchronously up to first await, kicking off the fetch) ---
-  loadWeather(host.city);
 
   // --- Return all effect descriptors so the runtime activates them ---
   return [
@@ -194,25 +150,74 @@ defineComponent<WeatherAppProps>('weather-app', ({ expose, first, host, on, watc
       return { activeIndex: host.activeIndex === idx ? -1 : idx };
     }),
 
-    // Visibility of loading / error / content
-    watch('isLoading', isLoading => { loadingEl.hidden = !isLoading; }),
-    watch('error', err => {
-      errorEl.hidden = !err;
-      if (err) errorMessageEl.textContent = err;
-    }),
-    watch('hasData', has => { contentEl.hidden = !has; }),
+    // Route Task states (nil/stale/err/ok) into visibility + button state.
+    // watch() wraps match() for Signal sources — this is Le Truc's idiomatic
+    // match-routed effect form, replacing the prior loadWeather + four status
+    // watches. Precedence: nil > err > stale > ok.
+    watch(weather, {
+      nil: () => {
+        loadingEl.hidden = false;
+        errorEl.hidden = true;
+        contentEl.hidden = true;
+        button.disabled = true;
+        buttonTextEl.textContent = 'Loading...';
+      },
+      stale: () => {
+        loadingEl.hidden = false;
+        errorEl.hidden = true;
+        contentEl.hidden = true;
+        button.disabled = true;
+        buttonTextEl.textContent = 'Loading...';
+      },
+      err: (error) => {
+        loadingEl.hidden = true;
+        errorEl.hidden = false;
+        contentEl.hidden = true;
+        errorMessageEl.textContent = error.message;
+        button.disabled = false;
+        buttonTextEl.textContent = 'Get Weather';
+      },
+      ok: (data) => {
+        loadingEl.hidden = true;
+        errorEl.hidden = true;
+        contentEl.hidden = false;
+        button.disabled = false;
+        buttonTextEl.textContent = 'Get Weather';
+        input.value = data.locationName;
+        populateCurrentWeather(data);
 
-    // Disable search button + sync button text while loading
-    watch('isLoading', isLoading => { button.disabled = isLoading; }),
-    watch('isLoading', isLoading => {
-      buttonTextEl.textContent = isLoading ? 'Loading...' : 'Get Weather';
+        // Rebuild forecast list from daily arrays
+        const daily = data.daily;
+        for (const key of Array.from(forecastList.keys())) forecastList.remove(key);
+        for (let i = 0; i < daily.time.length; i++) {
+          forecastList.add({
+            date: daily.time[i],
+            high: daily.temperature_2m_max[i],
+            low: daily.temperature_2m_min[i],
+            weatherCode: daily.weather_code[i],
+            sunrise: daily.sunrise[i],
+            sunset: daily.sunset[i],
+            rainSum: daily.rain_sum[i],
+            uvIndex: daily.uv_index_max[i],
+            precipitationProb: daily.precipitation_probability_max[i]
+          });
+        }
+        host.activeIndex = -1;
+
+        // Persist the resolved (canonical) city name
+        try {
+          localStorage.setItem('weather-app-location', data.locationName);
+        } catch {
+          /* ignore persistence errors */
+        }
+      }
     }),
 
-    // Search submit handler
+    // Search submit handler — setting host.city makes the Task re-fetch
     on(form, 'submit', (e: Event) => {
       e.preventDefault();
       const city = input.value.trim();
-      if (city) loadWeather(city);
+      if (city) host.city = city;
       return {};
     })
   ];
