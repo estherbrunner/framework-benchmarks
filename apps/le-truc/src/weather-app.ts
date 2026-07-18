@@ -1,4 +1,4 @@
-import { createList, createTask, defineComponent } from '@zeix/le-truc';
+import { createEffect, createList, createTask, defineComponent, match } from '@zeix/le-truc';
 import { type WeatherData, weatherService } from './weather-service.js';
 import { WeatherUtils } from './weather-utils.js';
 
@@ -95,15 +95,14 @@ defineComponent<WeatherAppProps>('weather-app', ({ expose, first, host, on, watc
     windDirectionEl.textContent = WeatherUtils.getWindDirection(c.wind_direction_10m);
   };
 
-  // --- Return all effect descriptors so the runtime activates them ---
-  return [
-    // Derive forecast list state from the weather Task.
-    // Separate from the match handler so the list write can't feed back into
-    // the Task's effect graph. The function form of watch() untracks its
-    // callback, so forecastList.set() here is a clean side-effect — no
-    // ping-pong. Keys are stable (date strings) so unchanged days reuse
-    // their DOM nodes across searches.
-    watch(weather, (data) => {
+  // --- Derive forecast list state from the weather Task ---
+  // Uses createEffect(match) rather than watch(weather, fn) because the
+  // latter does not subscribe to a Task signal (see repro/09-le-truc-minimal).
+  // The ok handler writes to forecastList, which propagates forward to the
+  // reconciler — no back-edge to `weather`, so no convergence loop.
+  // Stable date-string keys mean unchanged days reuse their DOM nodes.
+  createEffect(() => match(weather, {
+    ok: (data) => {
       const daily = data.daily;
       forecastList.set(daily.time.map((date, i) => ({
         date,
@@ -116,7 +115,59 @@ defineComponent<WeatherAppProps>('weather-app', ({ expose, first, host, on, watc
         uvIndex: daily.uv_index_max[i],
         precipitationProb: daily.precipitation_probability_max[i]
       })));
-    }),
+    },
+    nil: () => {}, err: () => {}, stale: () => {}
+  }));
+
+  // --- Route Task states (nil/stale/err/ok) into visibility + button state ---
+  // createEffect(match) rather than watch(weather, {handlers}) for the same
+  // reason as the list derivation above: the watch overloads don't subscribe
+  // to a Task. The ok handler does only DOM writes + host.activeKey = ''
+  // (a no-op when already '') + localStorage — no reactive writes that could
+  // cycle back into the weather Task. Precedence: nil > err > stale > ok.
+  createEffect(() => match(weather, {
+    nil: () => {
+      loadingEl.hidden = false;
+      errorEl.hidden = true;
+      contentEl.hidden = true;
+      button.disabled = true;
+      buttonTextEl.textContent = 'Loading...';
+    },
+    stale: () => {
+      loadingEl.hidden = false;
+      errorEl.hidden = true;
+      contentEl.hidden = true;
+      button.disabled = true;
+      buttonTextEl.textContent = 'Loading...';
+    },
+    err: (error) => {
+      loadingEl.hidden = true;
+      errorEl.hidden = false;
+      contentEl.hidden = true;
+      errorMessageEl.textContent = error.message;
+      button.disabled = false;
+      buttonTextEl.textContent = 'Get Weather';
+    },
+    ok: (data) => {
+      loadingEl.hidden = true;
+      errorEl.hidden = true;
+      contentEl.hidden = false;
+      button.disabled = false;
+      buttonTextEl.textContent = 'Get Weather';
+      input.value = data.locationName;
+      populateCurrentWeather(data);
+      host.activeKey = '';
+
+      try {
+        localStorage.setItem('weather-app-location', data.locationName);
+      } catch {
+        /* ignore persistence errors */
+      }
+    }
+  }));
+
+  // --- Return all effect descriptors so the runtime activates them ---
+  return [
 
     // Forecast DOM reconciler: mirror list keys into forecastListEl
     watch(() => Array.from(forecastList.keys()), keys => {
@@ -197,53 +248,6 @@ defineComponent<WeatherAppProps>('weather-app', ({ expose, first, host, on, watc
       if (!key) return {};
       e.preventDefault();
       return { activeKey: host.activeKey === key ? '' : key };
-    }),
-
-    // Route Task states (nil/stale/err/ok) into visibility + button state.
-    // watch(signal, handlers) wraps match() to form an effect descriptor.
-    // The ok handler does NOT mutate the forecast list — that's derived
-    // separately above to keep the data flow one-directional.
-    // Precedence: nil > err > stale > ok.
-    watch(weather, {
-      nil: () => {
-        loadingEl.hidden = false;
-        errorEl.hidden = true;
-        contentEl.hidden = true;
-        button.disabled = true;
-        buttonTextEl.textContent = 'Loading...';
-      },
-      stale: () => {
-        loadingEl.hidden = false;
-        errorEl.hidden = true;
-        contentEl.hidden = true;
-        button.disabled = true;
-        buttonTextEl.textContent = 'Loading...';
-      },
-      err: (error) => {
-        loadingEl.hidden = true;
-        errorEl.hidden = false;
-        contentEl.hidden = true;
-        errorMessageEl.textContent = error.message;
-        button.disabled = false;
-        buttonTextEl.textContent = 'Get Weather';
-      },
-      ok: (data) => {
-        loadingEl.hidden = true;
-        errorEl.hidden = true;
-        contentEl.hidden = false;
-        button.disabled = false;
-        buttonTextEl.textContent = 'Get Weather';
-        input.value = data.locationName;
-        populateCurrentWeather(data);
-        host.activeKey = '';
-
-        // Persist the resolved (canonical) city name
-        try {
-          localStorage.setItem('weather-app-location', data.locationName);
-        } catch {
-          /* ignore persistence errors */
-        }
-      }
     }),
 
     // Search submit handler — setting host.city makes the Task re-fetch
