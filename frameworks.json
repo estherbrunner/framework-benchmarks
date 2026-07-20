@@ -360,8 +360,8 @@
         "docs": "https://zeixcom.github.io/le-truc/",
         "github": "https://github.com/zeixcom/le-truc",
         "npmPackage": "@zeix/le-truc",
-        "color": "#1E1E1E",
-        "accentColor": "#E63946",
+        "color": "#a97fe9",
+        "accentColor": "#a97fe9",
         "logo": "",
         "description": "Type-safe reactive Web Components layer over server-rendered HTML",
         "longDescription": "HTML-first progressive enhancement with fine-grained signals, built on standard Web Components."

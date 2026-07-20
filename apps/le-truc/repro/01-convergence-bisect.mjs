@@ -8,7 +8,7 @@
 //   d) ok mutates a createList (the real weather-app pattern)
 //   e) ok mutates a createList, but wrapped in untrack
 
-import { createState, createTask, createEffect, match, createList, untrack } from '@zeix/cause-effect'
+import { createEffect, createList, createState, createTask, match, untrack } from '@zeix/cause-effect'
 
 const variant = process.argv[2] || 'a'
 const log = (m) => console.log(`[${variant}] ${m}`)

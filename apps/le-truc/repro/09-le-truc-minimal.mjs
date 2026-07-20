@@ -7,10 +7,10 @@
 //   node apps/le-truc/repro/09-le-truc-minimal.mjs [A|B]   (default A)
 //   pkill -f vite
 
-import { chromium } from '@playwright/test'
 import { readFileSync, writeFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { chromium } from '@playwright/test'
 
 const VARIANT = process.argv[2] || 'A'
 if (!['A', 'B'].includes(VARIANT)) {
@@ -65,4 +65,3 @@ try {
   writeFileSync(htmlPath, original)
   await browser.close()
 }
-
