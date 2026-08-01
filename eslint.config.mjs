@@ -156,6 +156,7 @@ export default [
         HTMLTemplateElement: 'readonly',
         DocumentFragment: 'readonly',
         DOMException: 'readonly',
+        CustomEvent: 'readonly',
       },
     },
     plugins: {
