@@ -54,13 +54,13 @@
   },
   "scripts": {
     "essentialCommands": {
-      "setup": "python scripts/setup/main.py",
-      "test": "python scripts/verify/test.py",
-      "lint": "python scripts/verify/lint.py",
-      "check": "python scripts/verify/check.py",
-      "build": "python scripts/run/build.py",
-      "start": "python scripts/run/serve.py",
-      "help": "python scripts/main.py"
+      "setup": ".venv/bin/python3 scripts/setup/main.py",
+      "test": ".venv/bin/python3 scripts/verify/test.py",
+      "lint": ".venv/bin/python3 scripts/verify/lint.py",
+      "check": ".venv/bin/python3 scripts/verify/check.py",
+      "build": ".venv/bin/python3 scripts/run/build.py",
+      "start": ".venv/bin/python3 scripts/run/serve.py",
+      "help": ".venv/bin/python3 scripts/main.py"
     },
     "sectionHeaders": {
       "dev": "// DEV COMMANDS",
@@ -140,13 +140,13 @@
   },
   "miscScripts": [
     {"name": "install:playwright", "command": "playwright install"},
-    {"name": "generate-mocks", "command": "python scripts/setup/generate_mocks.py"},
-    {"name": "generate-scripts", "command": "python scripts/setup/generate_scripts.py"},
-    {"name": "sync-assets", "command": "python scripts/setup/sync_assets.py"},
-    {"name": "benchmark", "command": "python scripts/benchmark/main.py"},
-    {"name": "benchmark:lighthouse", "command": "python scripts/benchmark/lighthouse.py"},
-    {"name": "verify", "command": "python scripts/verify/main.py"},
-    {"name": "build:static", "command": "python scripts/run/build.py -- --static-site"},
-    {"name": "transform", "command": "python scripts/transform/benchmark_results.py --average --output-dir ./results "}
+    {"name": "generate-mocks", "command": ".venv/bin/python3 scripts/setup/generate_mocks.py"},
+    {"name": "generate-scripts", "command": ".venv/bin/python3 scripts/setup/generate_scripts.py"},
+    {"name": "sync-assets", "command": ".venv/bin/python3 scripts/setup/sync_assets.py"},
+    {"name": "benchmark", "command": ".venv/bin/python3 scripts/benchmark/main.py"},
+    {"name": "benchmark:lighthouse", "command": ".venv/bin/python3 scripts/benchmark/lighthouse.py"},
+    {"name": "verify", "command": ".venv/bin/python3 scripts/verify/main.py"},
+    {"name": "build:static", "command": ".venv/bin/python3 scripts/run/build.py -- --static-site"},
+    {"name": "transform", "command": ".venv/bin/python3 scripts/transform/benchmark_results.py --average --output-dir ./results "}
   ]
 }

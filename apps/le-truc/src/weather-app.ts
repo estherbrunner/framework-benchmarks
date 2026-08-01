@@ -27,25 +27,25 @@ defineComponent<WeatherAppProps>('weather-app', ({ expose, first, host, on, watc
 
   // --- Query all required DOM nodes ---
   const form = first('form[data-testid="search-form"]', 'Search form is required');
-  const input = first('input[data-testid="search-input"]', 'Search input is required') as HTMLInputElement;
-  const button = first('button[data-testid="search-button"]', 'Search button is required') as HTMLButtonElement;
-  const buttonTextEl = first('.search-button__text', 'Search button text is required') as HTMLElement;
-  const loadingEl = first('[data-testid="loading"]', 'Loading element is required') as HTMLElement;
-  const errorEl = first('[data-testid="error"]', 'Error element is required') as HTMLElement;
-  const errorMessageEl = first('.error__message', 'Error message element is required') as HTMLElement;
-  const contentEl = first('[data-testid="weather-content"]', 'Weather content element is required') as HTMLElement;
-  const locationEl = first('[data-testid="current-location"]', 'Current location element is required') as HTMLElement;
-  const tempEl = first('[data-testid="current-temperature"]', 'Current temperature element is required') as HTMLElement;
-  const iconEl = first('[data-testid="current-icon"]', 'Current icon element is required') as HTMLElement;
-  const conditionEl = first('[data-testid="current-condition"]', 'Current condition element is required') as HTMLElement;
-  const feelsLikeEl = first('[data-testid="feels-like"]', 'Feels-like element is required') as HTMLElement;
-  const humidityEl = first('[data-testid="humidity"]', 'Humidity element is required') as HTMLElement;
-  const windSpeedEl = first('[data-testid="wind-speed"]', 'Wind-speed element is required') as HTMLElement;
-  const pressureEl = first('[data-testid="pressure"]', 'Pressure element is required') as HTMLElement;
-  const cloudCoverEl = first('[data-testid="cloud-cover"]', 'Cloud-cover element is required') as HTMLElement;
-  const windDirectionEl = first('[data-testid="wind-direction"]', 'Wind-direction element is required') as HTMLElement;
-  const forecastListEl = first('[data-testid="forecast-list"]', 'Forecast list element is required') as HTMLElement;
-  const template = first('#forecast-item-template', 'Forecast item template is required') as HTMLTemplateElement;
+  const input = first('input[data-testid="search-input"]', 'Search input is required');
+  const button = first('button[data-testid="search-button"]', 'Search button is required');
+  const buttonTextEl = first('.search-button__text', 'Search button text is required');
+  const loadingEl = first('[data-testid="loading"]', 'Loading element is required');
+  const errorEl = first('[data-testid="error"]', 'Error element is required');
+  const errorMessageEl = first('.error__message', 'Error message element is required');
+  const contentEl = first('[data-testid="weather-content"]', 'Weather content element is required');
+  const locationEl = first('[data-testid="current-location"]', 'Current location element is required');
+  const tempEl = first('[data-testid="current-temperature"]', 'Current temperature element is required');
+  const iconEl = first('[data-testid="current-icon"]', 'Current icon element is required');
+  const conditionEl = first('[data-testid="current-condition"]', 'Current condition element is required');
+  const feelsLikeEl = first('[data-testid="feels-like"]', 'Feels-like element is required');
+  const humidityEl = first('[data-testid="humidity"]', 'Humidity element is required');
+  const windSpeedEl = first('[data-testid="wind-speed"]', 'Wind-speed element is required');
+  const pressureEl = first('[data-testid="pressure"]', 'Pressure element is required');
+  const cloudCoverEl = first('[data-testid="cloud-cover"]', 'Cloud-cover element is required');
+  const windDirectionEl = first('[data-testid="wind-direction"]', 'Wind-direction element is required');
+  const forecastListEl = first('[data-testid="forecast-list"]', 'Forecast list element is required');
+  const template = first('template#forecast-item-template', 'Forecast item template is required');
 
   // --- Reactive list of forecast items, keyed by date (stable across searches) ---
   // The list is DERIVED from the weather Task (see the watch(weather, fn)
@@ -115,8 +115,7 @@ defineComponent<WeatherAppProps>('weather-app', ({ expose, first, host, on, watc
         uvIndex: daily.uv_index_max[i],
         precipitationProb: daily.precipitation_probability_max[i]
       })));
-    },
-    nil: () => {}, err: () => {}, stale: () => {}
+    }
   }));
 
   // --- Route Task states (nil/stale/err/ok) into visibility + button state ---
@@ -166,96 +165,92 @@ defineComponent<WeatherAppProps>('weather-app', ({ expose, first, host, on, watc
     }
   }));
 
-  // --- Return all effect descriptors so the runtime activates them ---
-  return [
+  // Forecast DOM reconciler: mirror list keys into forecastListEl
+  watch(() => Array.from(forecastList.keys()), keys => {
+    const current = new Map<string, HTMLElement>();
+    for (const child of Array.from(forecastListEl.children)) {
+      const el = child as HTMLElement;
+      const key = el.dataset.key;
+      if (key) current.set(key, el);
+    }
+    const keysSet = new Set(keys);
 
-    // Forecast DOM reconciler: mirror list keys into forecastListEl
-    watch(() => Array.from(forecastList.keys()), keys => {
-      const current = new Map<string, HTMLElement>();
-      for (const child of Array.from(forecastListEl.children)) {
-        const el = child as HTMLElement;
-        const key = el.dataset.key;
-        if (key) current.set(key, el);
-      }
-      const keysSet = new Set(keys);
+    // Drop children whose key is no longer present
+    for (const [key, el] of current) {
+      if (!keysSet.has(key)) el.remove();
+    }
 
-      // Drop children whose key is no longer present
-      for (const [key, el] of current) {
-        if (!keysSet.has(key)) el.remove();
-      }
-
-      // Insert new keys (clone template) and move existing into order
-      for (let i = 0; i < keys.length; i++) {
-        const key = keys[i];
-        let el = key && current.get(key);
-        if (key && !el) {
-          const fragment = template.content.cloneNode(true) as DocumentFragment;
-          el = fragment.firstElementChild as HTMLElement;
-          el.dataset.key = key;
-          const datum = forecastList.byKey(key)?.get();
-          if (datum) {
-            (el.querySelector('.forecast-item__day') as HTMLElement).textContent = WeatherUtils.formatDate(datum.date);
-            (el.querySelector('.forecast-item__icon') as HTMLElement).textContent = WeatherUtils.getWeatherIcon(datum.weatherCode, 1);
-            (el.querySelector('.forecast-item__condition') as HTMLElement).textContent = WeatherUtils.getWeatherDescription(datum.weatherCode);
-            (el.querySelector('[data-testid="forecast-high"]') as HTMLElement).textContent = WeatherUtils.formatTemperature(datum.high);
-            (el.querySelector('[data-testid="forecast-low"]') as HTMLElement).textContent = WeatherUtils.formatTemperature(datum.low);
-            // Populate the expandable details block
-            const details = el.querySelector('.forecast-item__details') as HTMLElement | null;
-            if (details) {
-              (details.querySelector('[data-field="sunrise"]') as HTMLElement).textContent = WeatherUtils.formatTime(datum.sunrise);
-              (details.querySelector('[data-field="sunset"]') as HTMLElement).textContent = WeatherUtils.formatTime(datum.sunset);
-              (details.querySelector('[data-field="rain"]') as HTMLElement).textContent = `${datum.rainSum.toFixed(1)} mm`;
-              (details.querySelector('[data-field="uv"]') as HTMLElement).textContent = datum.uvIndex.toFixed(1);
-              (details.querySelector('[data-field="precip"]') as HTMLElement).textContent = WeatherUtils.formatPercentage(datum.precipitationProb);
-              (details.querySelector('[data-field="temp"]') as HTMLElement).textContent = `${WeatherUtils.formatTemperature(datum.high)} / ${WeatherUtils.formatTemperature(datum.low)}`;
-            }
+    // Insert new keys (clone template) and move existing into order
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      let el = key && current.get(key);
+      if (key && !el) {
+        const fragment = template.content.cloneNode(true) as DocumentFragment;
+        el = fragment.firstElementChild as HTMLElement;
+        el.dataset.key = key;
+        const datum = forecastList.byKey(key)?.get();
+        if (datum) {
+          (el.querySelector('.forecast-item__day') as HTMLElement).textContent = WeatherUtils.formatDate(datum.date);
+          (el.querySelector('.forecast-item__icon') as HTMLElement).textContent = WeatherUtils.getWeatherIcon(datum.weatherCode, 1);
+          (el.querySelector('.forecast-item__condition') as HTMLElement).textContent = WeatherUtils.getWeatherDescription(datum.weatherCode);
+          (el.querySelector('[data-testid="forecast-high"]') as HTMLElement).textContent = WeatherUtils.formatTemperature(datum.high);
+          (el.querySelector('[data-testid="forecast-low"]') as HTMLElement).textContent = WeatherUtils.formatTemperature(datum.low);
+          // Populate the expandable details block
+          const details = el.querySelector('.forecast-item__details') as HTMLElement | null;
+          if (details) {
+            (details.querySelector('[data-field="sunrise"]') as HTMLElement).textContent = WeatherUtils.formatTime(datum.sunrise);
+            (details.querySelector('[data-field="sunset"]') as HTMLElement).textContent = WeatherUtils.formatTime(datum.sunset);
+            (details.querySelector('[data-field="rain"]') as HTMLElement).textContent = `${datum.rainSum.toFixed(1)} mm`;
+            (details.querySelector('[data-field="uv"]') as HTMLElement).textContent = datum.uvIndex.toFixed(1);
+            (details.querySelector('[data-field="precip"]') as HTMLElement).textContent = WeatherUtils.formatPercentage(datum.precipitationProb);
+            (details.querySelector('[data-field="temp"]') as HTMLElement).textContent = `${WeatherUtils.formatTemperature(datum.high)} / ${WeatherUtils.formatTemperature(datum.low)}`;
           }
         }
-        const currentAtI = forecastListEl.children[i];
-        if (el && currentAtI !== el) forecastListEl.insertBefore(el, currentAtI ?? null);
       }
-    }),
+      const currentAtI = forecastListEl.children[i];
+      if (el && currentAtI !== el) forecastListEl.insertBefore(el, currentAtI ?? null);
+    }
+  });
 
-    // Per-item active-state toggle (re-evaluated when activeKey changes).
-    // Toggles both the .active class (drives styling) and the details block's
-    // `hidden` attribute (drives expand/collapse visibility).
-    watch('activeKey', () => {
-      const items = Array.from(forecastListEl.querySelectorAll<HTMLElement>('.forecast-item'));
-      for (const item of items) {
-        const key = item.dataset.key;
-        if (!key) continue;
-        const isActive = host.activeKey === key;
-        item.classList.toggle('active', isActive);
-        const details = item.querySelector<HTMLElement>('.forecast-item__details');
-        if (details) details.hidden = !isActive;
-      }
-    }),
+  // Per-item active-state toggle (re-evaluated when activeKey changes).
+  // Toggles both the .active class (drives styling) and the details block's
+  // `hidden` attribute (drives expand/collapse visibility).
+  watch('activeKey', () => {
+    const items = Array.from(forecastListEl.querySelectorAll<HTMLElement>('.forecast-item'));
+    for (const item of items) {
+      const key = item.dataset.key;
+      if (!key) continue;
+      const isActive = host.activeKey === key;
+      item.classList.toggle('active', isActive);
+      const details = item.querySelector<HTMLElement>('.forecast-item__details');
+      if (details) details.hidden = !isActive;
+    }
+  });
 
-    // Click + keyboard handler for forecast items (event delegation on the list).
-    // Enter/Space toggle the same as click — required for keyboard accessibility.
-    on(forecastListEl, 'click', (e: Event) => {
-      const target = e.target as HTMLElement;
-      const item = target.closest('.forecast-item') as HTMLElement | null;
-      const key = item?.dataset.key;
-      if (!key) return {};
-      return { activeKey: host.activeKey === key ? '' : key };
-    }),
-    on(forecastListEl, 'keydown', (e: KeyboardEvent) => {
-      if (e.key !== 'Enter' && e.key !== ' ') return {};
-      const target = e.target as HTMLElement;
-      const item = target.closest('.forecast-item') as HTMLElement | null;
-      const key = item?.dataset.key;
-      if (!key) return {};
-      e.preventDefault();
-      return { activeKey: host.activeKey === key ? '' : key };
-    }),
+  // Click + keyboard handler for forecast items (event delegation on the list).
+  // Enter/Space toggle the same as click — required for keyboard accessibility.
+  on(forecastListEl, 'click', (e: Event) => {
+    const target = e.target as HTMLElement;
+    const item = target.closest('.forecast-item') as HTMLElement | null;
+    const key = item?.dataset.key;
+    if (!key) return {};
+    return { activeKey: host.activeKey === key ? '' : key };
+  });
+  on(forecastListEl, 'keydown', (e: KeyboardEvent) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return {};
+    const target = e.target as HTMLElement;
+    const item = target.closest('.forecast-item') as HTMLElement | null;
+    const key = item?.dataset.key;
+    if (!key) return {};
+    e.preventDefault();
+    return { activeKey: host.activeKey === key ? '' : key };
+  });
 
-    // Search submit handler — setting host.city makes the Task re-fetch
-    on(form, 'submit', (e: Event) => {
-      e.preventDefault();
-      const city = input.value.trim();
-      if (city) host.city = city;
-      return {};
-    })
-  ];
+  // Search submit handler — setting host.city makes the Task re-fetch
+  on(form, 'submit', (e: Event) => {
+    e.preventDefault();
+    const city = input.value.trim();
+    if (city) host.city = city;
+    return {};
+  });
 });

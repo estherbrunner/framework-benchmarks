@@ -11,7 +11,7 @@
     "test:ui": "playwright test --ui"
   },
   "dependencies": {
-    "@zeix/le-truc": "^2.2.0"
+    "@zeix/le-truc": "^2.3.2"
   },
   "devDependencies": {
     "@playwright/test": "^1.40.0",
