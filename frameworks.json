@@ -10,7 +10,10 @@
         "hasNodeModules": true,
         "devCommand": "vite",
         "testCommand": "playwright test --config=tests/config/playwright-react.config.js",
-        "lintFiles": ["js", "jsx"]
+        "lintFiles": [
+          "js",
+          "jsx"
+        ]
       },
       "meta": {
         "emoji": "⚛️",
@@ -44,7 +47,10 @@
         "hasNodeModules": true,
         "devCommand": "ng serve --port 3000",
         "testCommand": "playwright test --config=tests/config/playwright-angular.config.js",
-        "lintFiles": ["ts", "html"]
+        "lintFiles": [
+          "ts",
+          "html"
+        ]
       },
       "meta": {
         "emoji": "🅰️",
@@ -79,7 +85,10 @@
         "hasNodeModules": true,
         "devCommand": "vite dev --port 3000",
         "testCommand": "playwright test --config=tests/config/playwright-svelte.config.js",
-        "lintFiles": ["js", "svelte"]
+        "lintFiles": [
+          "js",
+          "svelte"
+        ]
       },
       "meta": {
         "emoji": "🔥",
@@ -113,7 +122,10 @@
         "hasNodeModules": true,
         "devCommand": "vite",
         "testCommand": "playwright test --config=tests/config/playwright-preact.config.js",
-        "lintFiles": ["js", "jsx"]
+        "lintFiles": [
+          "js",
+          "jsx"
+        ]
       },
       "meta": {
         "emoji": "💜",
@@ -148,7 +160,10 @@
         "hasNodeModules": true,
         "devCommand": "vite",
         "testCommand": "playwright test --config=tests/config/playwright-solid.config.js",
-        "lintFiles": ["js", "jsx"]
+        "lintFiles": [
+          "js",
+          "jsx"
+        ]
       },
       "meta": {
         "emoji": "🚀",
@@ -182,7 +197,10 @@
         "hasNodeModules": true,
         "devCommand": "vite --port 3000",
         "testCommand": "playwright test --config=tests/config/playwright-qwik.config.js",
-        "lintFiles": ["ts", "tsx"]
+        "lintFiles": [
+          "ts",
+          "tsx"
+        ]
       },
       "meta": {
         "emoji": "⚡",
@@ -217,7 +235,10 @@
         "hasNodeModules": true,
         "devCommand": "vite --port 3000",
         "testCommand": "playwright test --config=tests/config/playwright-vue.config.js",
-        "lintFiles": ["js", "vue"]
+        "lintFiles": [
+          "js",
+          "vue"
+        ]
       },
       "meta": {
         "emoji": "💚",
@@ -251,7 +272,9 @@
         "hasNodeModules": true,
         "devCommand": "vite --port 3000",
         "testCommand": "playwright test --config=tests/config/playwright-jquery.config.js",
-        "lintFiles": ["js"]
+        "lintFiles": [
+          "js"
+        ]
       },
       "meta": {
         "emoji": "💙",
@@ -280,7 +303,9 @@
         "hasNodeModules": false,
         "devCommand": "python3 -m http.server 3000 || python -m http.server 3000",
         "testCommand": "playwright test --config=tests/config/playwright-alpine.config.js",
-        "lintFiles": ["js"]
+        "lintFiles": [
+          "js"
+        ]
       },
       "meta": {
         "emoji": "🏔️",
@@ -314,7 +339,9 @@
         "hasNodeModules": true,
         "devCommand": "vite --port 3000",
         "testCommand": "playwright test --config=tests/config/playwright-lit.config.js",
-        "lintFiles": ["js"]
+        "lintFiles": [
+          "js"
+        ]
       },
       "meta": {
         "emoji": "🔥",
@@ -377,7 +404,9 @@
         "hasNodeModules": true,
         "devCommand": "vite --port 3000",
         "testCommand": "playwright test --config=tests/config/playwright-vanjs.config.js",
-        "lintFiles": ["js"]
+        "lintFiles": [
+          "js"
+        ]
       },
       "meta": {
         "emoji": "🚐",
@@ -412,7 +441,9 @@
         "hasNodeModules": false,
         "devCommand": "python3 -m http.server 3000 || python -m http.server 3000",
         "testCommand": "playwright test --config=tests/config/playwright-lume-js.config.js",
-        "lintFiles": ["js"]
+        "lintFiles": [
+          "js"
+        ]
       },
       "meta": {
         "emoji": "💡",
@@ -430,6 +461,70 @@
       }
     },
     {
+      "id": "astro",
+      "name": "Astro",
+      "dir": "astro",
+      "assetsDir": "public",
+      "buildDir": "dist",
+      "build": {
+        "buildCommand": "astro build",
+        "hasNodeModules": true,
+        "devCommand": "astro dev --port 3000",
+        "testCommand": "playwright test --config=tests/config/playwright-astro.config.js",
+        "lintFiles": [
+          "js"
+        ]
+      },
+      "meta": {
+        "emoji": "🚀",
+        "iconName": "astro",
+        "website": "https://astro.build/",
+        "docs": "https://docs.astro.build/",
+        "github": "https://github.com/withastro/astro",
+        "npmPackage": "astro",
+        "color": "#BC52EE",
+        "accentColor": "#BC52EE",
+        "logo": "https://astro.build/assets/press/astro-logo-light-gradient.svg",
+        "description": "Content-first framework that ships zero JS by default, with opt-in islands",
+        "longDescription": "Server-first framework rendering static HTML at build time, hydrating only interactive islands."
+      },
+      "exampleRealApp": {
+        "title": "Awesome Privacy",
+        "description": "A curated list of privacy-respecting software and services",
+        "repo": "https://github.com/Lissy93/awesome-privacy",
+        "website": "https://awesome-privacy.xyz/",
+        "logo": "https://pixelflare.cc/alicia/logo/awesome-privacy/w256"
+      }
+    },
+    {
+      "id": "geajs",
+      "name": "Gea",
+      "displayName": "Gea.js",
+      "dir": "geajs",
+      "assetsDir": "public",
+      "build": {
+        "buildCommand": "vite build",
+        "hasNodeModules": true,
+        "devCommand": "vite --port 3000",
+        "testCommand": "playwright test --config=tests/config/playwright-geajs.config.js",
+        "lintFiles": ["js", "jsx"]
+      },
+      "meta": {
+        "emoji": "🌍",
+        "iconName": "googleearth",
+        "iconUrl": "https://geajs.com/logo.png",
+        "website": "https://geajs.com/",
+        "docs": "https://geajs.com/docs/getting-started.html",
+        "github": "https://github.com/dashersw/gea",
+        "npmPackage": "@geajs/core",
+        "color": "#00e5ff",
+        "accentColor": "#00e5ff",
+        "logo": "https://geajs.com/logo.png",
+        "description": "Compiler-first reactive framework that compiles JSX into surgical DOM updates",
+        "longDescription": "Compiler-first framework with proxy-based stores, no virtual DOM, and tiny bundles."
+      }
+    },
+    {
       "id": "vanilla",
       "name": "Vanilla JS",
       "displayName": "Vanilla JavaScript",
@@ -441,7 +536,9 @@
         "hasNodeModules": false,
         "devCommand": "python3 -m http.server 3000 || python -m http.server 3000",
         "testCommand": "playwright test --config=tests/config/playwright-vanilla.config.js",
-        "lintFiles": ["js"]
+        "lintFiles": [
+          "js"
+        ]
       },
       "meta": {
         "emoji": "🧪",

@@ -33,7 +33,9 @@ FRAMEWORK_COLORS = {
     'jquery': '#0769AD',
     'vanjs': '#FF6B35',
     'le-truc': '#a97fe9',
-    'lume-js': '#7C3AED'
+    'lume-js': '#7C3AED',
+    'astro': '#BC52EE',
+    'geajs': '#00e5ff'
 }
 
 # Color mappings for specific chart metrics

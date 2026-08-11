@@ -3,48 +3,39 @@
   "summary_charts": [
     {
       "title": "Performance Overview",
-      "url": "https://quickchart.io/chart/render/zf-8fa22c0c-295c-4647-b017-60d31ef48e91",
-      "chart_id": "performance_radar"
+      "url": "https://quickchart.io/chart/render/zf-0f0d90cb-5355-4aa6-9ea4-2a3b27881dc2",      "chart_id": "performance_radar"
     },
     {
       "title": "Performance vs Bundle Size",
-      "url": "https://quickchart.io/chart/render/zf-fe80d676-98bf-436e-b39b-fcf2108d2f48",
-      "chart_id": "performance_quadrant"
+      "url": "https://quickchart.io/chart/render/zf-6af2f505-1755-4c7c-a961-b98c23ec161f",      "chart_id": "performance_quadrant"
     },
     {
       "title": "Source Code Analysis",
-      "url": "https://quickchart.io/chart/render/zf-eb71ec61-fc2a-4f87-8a44-cd0dc0fc0aa6",
-      "chart_id": "source_analysis"
+      "url": "https://quickchart.io/chart/render/zf-791e6abc-96d0-441f-b5e2-50231dab432d",      "chart_id": "source_analysis"
     },
     {
       "title": "Bundle Size and Comparison",
-      "url": "https://quickchart.io/chart/render/zf-4f8d0c7d-2c88-4483-961b-8314cb556cba",
-      "chart_id": "bundle_size_comparison"
+      "url": "https://quickchart.io/chart/render/zf-76945a52-5bd9-432f-8cfd-d53e8ae625f2",      "chart_id": "bundle_size_comparison"
     },
     {
       "title": "Lighthouse Performance Scores",
-      "url": "https://quickchart.io/chart/render/zf-18a91d05-108b-47f7-a605-db7a8fe88336",
-      "chart_id": "lighthouse_radial"
+      "url": "https://quickchart.io/chart/render/zf-15d04aaa-e1ce-49d3-baf4-fba2e7f5f277",      "chart_id": "lighthouse_radial"
     },
     {
       "title": "Loading Performance",
-      "url": "https://quickchart.io/chart/render/zf-bc1e6347-9316-4b08-a8d5-0e03a9b8cb32",
-      "chart_id": "load_timeline"
+      "url": "https://quickchart.io/chart/render/zf-b4afa9fa-5f12-4d12-b766-01a2fdac9aa7",      "chart_id": "load_timeline"
     },
     {
       "title": "Project Size Distribution",
-      "url": "https://quickchart.io/chart/render/zf-7424be85-0516-41d6-968b-3b999ef1eb2f",
-      "chart_id": "project_size_pie"
+      "url": "https://quickchart.io/chart/render/zf-812f78b8-b323-40c3-9ff1-0f24f37e2cfb",      "chart_id": "project_size_pie"
     },
     {
       "title": "Development Server Performance",
-      "url": "https://quickchart.io/chart/render/zf-11f27659-373b-4928-b5dd-c8b5ee22309a",
-      "chart_id": "dev_server_performance"
+      "url": "https://quickchart.io/chart/render/zf-72b11f4c-10dc-4a87-a056-06dc2c61920f",      "chart_id": "dev_server_performance"
     },
     {
       "title": "Build Time Distribution",
-      "url": "https://quickchart.io/chart/render/zf-e10067be-699f-419c-a022-7ef4fc166ced",
-      "chart_id": "build_time_donut"
+      "url": "https://quickchart.io/chart/render/zf-de458a0a-c01b-4362-9654-339ade9d530d",      "chart_id": "build_time_donut"
     }
   ]
 }
