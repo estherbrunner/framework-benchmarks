@@ -1,9 +1,20 @@
-import { defineComponent } from '@zeix/le-truc';
-import { WeatherUtils } from './weather-utils.js';
+import { defineComponent, query } from '@zeix/le-truc';
+import {
+  formatPercentage,
+  formatPressure,
+  formatTemperature,
+  formatWindSpeed,
+  getConditionClass,
+  getWeatherDescription,
+  getWeatherIcon,
+  getWindDirection
+} from './utils.js';
 
-// Presentational current-conditions card. Receives raw current-weather
-// fields from the parent via pass() and owns all display formatting.
-export type CurrentWeatherProps = {
+// Presentational current-conditions card. Receives one formatted snapshot
+// from the parent via pass() and owns all display formatting. A single
+// object prop (rather than one prop per field) matches how the data always
+// changes together — a new city or a new fetch replaces the whole snapshot.
+export type CurrentWeatherData = {
   location: string;
   country: string;
   temperature: number;
@@ -15,48 +26,66 @@ export type CurrentWeatherProps = {
   pressure: number;
   cloudCover: number;
   windDirection: number;
-  [key: string]: NonNullable<unknown>;
 };
 
-defineComponent<CurrentWeatherProps>('current-weather', ({ expose, first, watch }) => {
-  const locationEl = first('[data-testid="current-location"]', 'Current location element is required');
-  const tempEl = first('[data-testid="current-temperature"]', 'Current temperature element is required');
-  const iconEl = first('[data-testid="current-icon"]', 'Current icon element is required');
-  const conditionEl = first('[data-testid="current-condition"]', 'Current condition element is required');
-  const feelsLikeEl = first('[data-testid="feels-like"]', 'Feels-like element is required');
-  const humidityEl = first('[data-testid="humidity"]', 'Humidity element is required');
-  const windSpeedEl = first('[data-testid="wind-speed"]', 'Wind-speed element is required');
-  const pressureEl = first('[data-testid="pressure"]', 'Pressure element is required');
-  const cloudCoverEl = first('[data-testid="cloud-cover"]', 'Cloud-cover element is required');
-  const windDirectionEl = first('[data-testid="wind-direction"]', 'Wind-direction element is required');
+export const emptyCurrentWeatherData: CurrentWeatherData = {
+  location: '',
+  country: '',
+  temperature: 0,
+  weatherCode: 0,
+  isDay: 1,
+  apparentTemperature: 0,
+  humidity: 0,
+  windSpeed: 0,
+  pressure: 0,
+  cloudCover: 0,
+  windDirection: 0
+};
 
-  expose({
-    location: '',
-    country: '',
-    temperature: 0,
-    weatherCode: 0,
-    isDay: 1,
-    apparentTemperature: 0,
-    humidity: 0,
-    windSpeed: 0,
-    pressure: 0,
-    cloudCover: 0,
-    windDirection: 0
-  });
+export type CurrentWeatherProps = {
+  weather: CurrentWeatherData;
+};
 
-  watch(['location', 'country'], ([location, country]) => {
-    locationEl.textContent = `${location}${country ? `, ${country}` : ''}`;
-  });
-  watch('temperature', v => { tempEl.textContent = WeatherUtils.formatTemperature(v); });
-  watch(['weatherCode', 'isDay'], ([code, isDay]) => { iconEl.textContent = WeatherUtils.getWeatherIcon(code, isDay); });
-  watch('weatherCode', code => {
-    conditionEl.textContent = WeatherUtils.getWeatherDescription(code);
-    conditionEl.className = `current-weather__condition ${WeatherUtils.getConditionClass(code)}`;
-  });
-  watch('apparentTemperature', v => { feelsLikeEl.textContent = WeatherUtils.formatTemperature(v); });
-  watch('humidity', v => { humidityEl.textContent = WeatherUtils.formatPercentage(v); });
-  watch('windSpeed', v => { windSpeedEl.textContent = WeatherUtils.formatWindSpeed(v); });
-  watch('pressure', v => { pressureEl.textContent = WeatherUtils.formatPressure(v); });
-  watch('cloudCover', v => { cloudCoverEl.textContent = WeatherUtils.formatPercentage(v); });
-  watch('windDirection', v => { windDirectionEl.textContent = WeatherUtils.getWindDirection(v); });
-});
+declare global {
+	interface HTMLElementTagNameMap {
+		'current-weather': HTMLElement & CurrentWeatherProps
+	}
+}
+
+defineComponent<CurrentWeatherProps>(
+  'current-weather',
+  ({ expose, host, watch }) => {
+    const elIds = [
+      'current-location',
+      'current-temperature',
+      'current-icon',
+      'current-condition',
+      'feels-like',
+      'humidity',
+      'wind-speed',
+      'pressure',
+      'cloud-cover',
+      'wind-direction'
+    ] as const;
+    const elMap = {} as Record<string, HTMLElement>;
+    for (const id of elIds) {
+      elMap[id] = query(host, `[data-testid="${id}"]`, 'required');
+    }
+
+    expose({ weather: emptyCurrentWeatherData });
+
+    watch('weather', (data) => {
+      elMap['current-location'].textContent = `${data.location}${data.country ? `, ${data.country}` : ''}`;
+      elMap['current-temperature'].textContent = formatTemperature(data.temperature);
+      elMap['current-icon'].textContent = getWeatherIcon(data.weatherCode, data.isDay);
+      elMap['current-condition'].textContent = getWeatherDescription(data.weatherCode);
+      elMap['current-condition'].className = `current-weather__condition ${getConditionClass(data.weatherCode)}`;
+      elMap['feels-like'].textContent = formatTemperature(data.apparentTemperature);
+      elMap.humidity.textContent = formatPercentage(data.humidity);
+      elMap['wind-speed'].textContent = formatWindSpeed(data.windSpeed);
+      elMap.pressure.textContent = formatPressure(data.pressure);
+      elMap['cloud-cover'].textContent = formatPercentage(data.cloudCover);
+      elMap['wind-direction'].textContent = getWindDirection(data.windDirection);
+    });
+  }
+);

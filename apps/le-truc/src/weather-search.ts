@@ -7,14 +7,16 @@ import { bindProperty, defineComponent } from '@zeix/le-truc';
 export type WeatherSearchProps = {
   value: string;
   loading: boolean;
-  [key: string]: NonNullable<unknown>;
 };
 
+declare global {
+	interface HTMLElementTagNameMap {
+		'weather-search': HTMLElement & WeatherSearchProps
+	}
+}
+
 defineComponent<WeatherSearchProps>('weather-search', ({ expose, first, host, on, watch }) => {
-  const form = first('form[data-testid="search-form"]', 'Search form is required');
   const input = first('input[data-testid="search-input"]', 'Search input is required');
-  const button = first('button[data-testid="search-button"]', 'Search button is required');
-  const buttonTextEl = first('.search-button__text', 'Search button text is required');
 
   expose({
     value: input.value,
@@ -23,14 +25,20 @@ defineComponent<WeatherSearchProps>('weather-search', ({ expose, first, host, on
 
   watch('value', bindProperty(input, 'value'));
 
+  const button = first('button[data-testid="search-button"]', 'Search button is required');
+  const buttonTextEl = first('.search-button__text', 'Search button text is required');
   watch('loading', loading => {
     button.disabled = loading;
     buttonTextEl.textContent = loading ? 'Loading...' : 'Get Weather';
   });
 
+  const form = first('form[data-testid="search-form"]', 'Search form is required');
   on(form, 'submit', (e: Event) => {
     e.preventDefault();
     const city = input.value.trim();
-    if (city) host.dispatchEvent(new CustomEvent('weather-search', { detail: { city }, bubbles: true }));
+    if (city) host.dispatchEvent(new CustomEvent('weather-search', {
+      detail: { city },
+      bubbles: true
+    }));
   });
 });
